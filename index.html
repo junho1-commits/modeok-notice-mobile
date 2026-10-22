@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1A1A2E">
+<title>모덕 교육활동</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root {
+    --bg: #1A1A2E;
+    --bg2: #22223B;
+    --line: #30475E;
+    --card: #FFFFFF;
+    --ink: #1D1D1F;
+    --ink2: #555;
+    --accent: #F9ED69;
+    --blue: #2980B9;
+    --mint: #4ECCA3;
+    --red: #E94560;
+    --font: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--ink); font-family: var(--font);
+    font-size: 16px; line-height: 1.45; min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  a { color: var(--blue); word-break: break-all; }
+  button { font-family: inherit; }
+
+  /* 상단 바 */
+  header.top {
+    position: sticky; top: 0; z-index: 20; background: var(--bg);
+    padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .titlebar { display: flex; align-items: center; gap: 10px; }
+  .brand {
+    display: flex; align-items: center; gap: 8px; background: #fff; border: 2px solid #1b6b33;
+    border-radius: 16px; padding: 4px 14px 4px 6px; min-width: 0;
+  }
+  .brand img { width: 30px; height: 30px; border-radius: 50%; }
+  .brand b { font-size: 18px; font-weight: 900; color: #000; white-space: nowrap; }
+  .spacer { flex: 1; }
+  .iconbtn {
+    width: 40px; height: 40px; border-radius: 12px; border: none; background: var(--bg2);
+    color: #fff; font-size: 19px; display: grid; place-items: center; cursor: pointer;
+  }
+  .iconbtn:active { transform: scale(.94); }
+  .iconbtn.spin span { display: inline-block; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .datebar { display: flex; align-items: center; gap: 6px; margin-top: 10px; }
+  .datebar .iconbtn { width: 36px; height: 36px; font-size: 16px; }
+  .datelabel {
+    flex: 1; text-align: center; color: var(--accent); font-weight: 800; font-size: 17px;
+    position: relative;
+  }
+  .datelabel input[type=date] { position: absolute; inset: 0; opacity: 0; width: 100%; }
+  .todaybtn {
+    border: none; background: var(--accent); color: var(--bg); font-weight: 800; border-radius: 10px;
+    padding: 8px 12px; font-size: 14px; cursor: pointer;
+  }
+  .status { color: var(--accent); font-size: 12px; text-align: center; min-height: 16px; margin-top: 4px; opacity: .9; }
+
+  .seg { display: flex; background: var(--bg2); border-radius: 12px; padding: 4px; margin-top: 8px; }
+  .seg button {
+    flex: 1; border: none; background: transparent; color: #bbb; padding: 8px 4px; border-radius: 9px;
+    font-weight: 700; font-size: 14px; cursor: pointer;
+  }
+  .seg button.on { background: var(--accent); color: var(--bg); }
+
+  main { padding: 12px 16px 40px; max-width: 720px; margin: 0 auto; }
+
+  .weather {
+    background: #FFF9C4; color: var(--bg); border-radius: 12px; padding: 8px 12px;
+    font-weight: 700; font-size: 14px; margin-bottom: 12px;
+  }
+  .card { background: var(--card); border-radius: 16px; padding: 14px 16px; margin-bottom: 12px; }
+  .card h2 {
+    margin: 0 0 8px; font-size: 17px; font-weight: 900; color: var(--blue);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card h2 .count {
+    font-size: 12px; font-weight: 700; background: #EAF2FA; color: var(--blue);
+    border-radius: 10px; padding: 1px 8px;
+  }
+  .empty { color: #888; font-size: 15px; }
+  .sectiontitle { color: var(--accent); font-weight: 800; font-size: 15px; margin: 4px 2px 8px; }
+
+  /* 업무전달 체크 */
+  .task { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-top: 1px solid #f0f0f0; }
+  .task:first-of-type { border-top: none; }
+  .task input { width: 20px; height: 20px; margin: 2px 0 0; flex: none; accent-color: var(--mint); }
+  .task.done span { color: #aaa; text-decoration: line-through; }
+  ul.plain { margin: 0; padding-left: 18px; }
+  ul.plain li { padding: 3px 0; }
+
+  /* 복무 */
+  .dgroup { margin-top: 10px; }
+  .dgroup:first-of-type { margin-top: 0; }
+  .chip {
+    display: inline-block; font-size: 13px; font-weight: 800; border-radius: 8px; padding: 2px 10px;
+    margin-bottom: 4px; color: #fff;
+  }
+  .person {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 5px 0 5px 4px;
+    border-bottom: 1px dashed #eee;
+  }
+  .person:last-child { border-bottom: none; }
+  .person b { font-size: 16px; }
+  .person .t { color: var(--ink2); font-size: 14px; font-variant-numeric: tabular-nums; }
+  .person .p { color: #777; font-size: 13px; width: 100%; }
+  .person .k { color: #999; font-size: 12px; }
+
+  .quote { font-size: 17px; font-weight: 700; color: #111; white-space: pre-wrap; }
+  .quote img { max-width: 100%; border-radius: 10px; display: block; }
+
+  details.notice summary { cursor: pointer; list-style: none; }
+  details.notice summary::-webkit-details-marker { display: none; }
+  details.notice summary h2::after { content: '▾'; margin-left: auto; color: #999; }
+  details.notice:not([open]) summary h2 { margin-bottom: 0; }
+  details.notice:not([open]) summary h2::after { content: '▸'; }
+
+  /* 메뉴/시트 */
+  .sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 50; display: none; }
+  .sheet-bg.on { display: block; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 51; background: #fff; border-radius: 20px 20px 0 0;
+    padding: 16px 16px calc(20px + env(safe-area-inset-bottom)); max-height: 88vh; overflow: auto;
+    transform: translateY(105%); transition: transform .22s ease; max-width: 720px; margin: 0 auto;
+  }
+  .sheet.on { transform: none; }
+  .sheet h3 { margin: 0 0 12px; font-size: 18px; }
+  .sheet .menuitem {
+    display: block; width: 100%; text-align: left; border: none; background: #F4F5F7; border-radius: 12px;
+    padding: 14px; font-size: 16px; font-weight: 700; margin-bottom: 8px; cursor: pointer; color: var(--ink);
+  }
+  .sheet label { display: block; font-weight: 700; font-size: 14px; margin: 10px 0 4px; }
+  .sheet input[type=text], .sheet input[type=password], .sheet input[type=date] {
+    width: 100%; padding: 12px; font-size: 16px; border: 1px solid #ccc; border-radius: 10px; font-family: inherit;
+  }
+  .row2 { display: flex; gap: 8px; }
+  .row2 > * { flex: 1; }
+  .btn {
+    border: none; border-radius: 12px; padding: 13px; font-size: 16px; font-weight: 800; cursor: pointer; width: 100%;
+  }
+  .btn.ok { background: var(--mint); color: #fff; }
+  .btn.no { background: #E5E7EB; color: #333; }
+  .btn:disabled { opacity: .5; }
+  .hint { font-size: 13px; color: #666; margin: 6px 0; }
+  .preview { font-size: 14px; background: #F7F7F9; border-radius: 10px; padding: 10px; max-height: 40vh; overflow: auto; }
+  .preview .d { font-weight: 800; color: var(--blue); margin-top: 6px; }
+  .preview .d:first-child { margin-top: 0; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+    background: #111; color: #fff; padding: 10px 16px; border-radius: 12px; font-size: 14px; z-index: 60;
+    opacity: 0; transition: opacity .2s; pointer-events: none; max-width: 90vw; text-align: center;
+  }
+  .toast.on { opacity: .95; }
+  .imgview { position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 70; display: none; place-items: center; }
+  .imgview.on { display: grid; }
+  .imgview img { max-width: 96vw; max-height: 90vh; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="titlebar">
+    <div class="brand"><img src="icon-192.png" alt=""><b>오늘의 교육활동</b></div>
+    <div class="spacer"></div>
+    <button class="iconbtn" id="refreshBtn" aria-label="새로고침"><span>⟳</span></button>
+    <button class="iconbtn" id="menuBtn" aria-label="메뉴">⋮</button>
+  </div>
+  <div class="datebar">
+    <button class="iconbtn" id="prevBtn" aria-label="이전 날짜">◀</button>
+    <div class="datelabel"><span id="dateText"></span><input type="date" id="datePick" aria-label="날짜 선택"></div>
+    <button class="iconbtn" id="nextBtn" aria-label="다음 날짜">▶</button>
+    <button class="todaybtn" id="todayBtn">오늘</button>
+  </div>
+  <div class="seg" id="seg">
+    <button data-v="cur" class="on" id="segCur">오늘</button>
+    <button data-v="next" id="segNext">다음 수업일</button>
+  </div>
+  <div class="status" id="status"></div>
+</header>
+
+<main id="main"></main>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet"></div>
+<div class="toast" id="toast"></div>
+<div class="imgview" id="imgView"><img alt=""></div>
+
+<script>
+// ─── 설정 ─────────────────────────────────────────────────────────────────
+// 시트 주소는 이 파일에 넣지 않습니다(공개 저장소에 개인정보가 남지 않도록).
+// 처음 한 번 '설정 링크(#setup=...)'를 열거나 설정 코드를 붙여넣으면 그 휴대폰에만 저장됩니다.
+// 토큰도 파일에 넣지 않고, 관리자가 처음 업로드할 때 한 번 입력하면 그 휴대폰에만 저장됩니다.
+const CONFIG = {
+  SCHEDULE_URL: '', NOTICE_URL: '', SCRIPT_URL: '', SHEET_EDIT_URL: '',
+  // 시트 '일정' 탭에 새로 추가하는 열 이름. 모든 복무(출장·연가·조퇴·병가 등)가 여기에 저장됩니다.
+  DUTY_FIELD: "복무",
+};
+const XLSX_CDN = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
+
+// ─── 저장소 (사생활 모드 등에서 실패해도 앱은 동작) ───────────────────────────
+const store = {
+  get(k, d = null) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} },
+};
+
+// ─── 유틸 ─────────────────────────────────────────────────────────────────
+const $ = (s) => document.querySelector(s);
+const pad2 = (n) => String(n).padStart(2, '0');
+const ymd = (d) => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+const todayStr = () => ymd(new Date());
+const WEEK = ['일', '월', '화', '수', '목', '금', '토'];
+function prettyDate(s) {
+  const [y, m, d] = s.split('-').map(Number);
+  const dt = new Date(y, m - 1, d);
+  return `${m}월 ${d}일 (${WEEK[dt.getDay()]})`;
+}
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function linkify(html) {
+  return html.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>');
+}
+const COLOR_TAGS = { '빨강': '#E74C3C', '파랑': '#2980B9', '초록': '#27AE60', '노랑': '#F39C12', '보라': '#8E44AD', '주황': '#E67E22' };
+function colorTags(html) {
+  for (const [name, code] of Object.entries(COLOR_TAGS)) {
+    html = html.split(`[${name}]`).join(`<span style="color:${code};font-weight:bold">`).split(`[/${name}]`).join('</span>');
+  }
+  return html;
+}
+const rich = (s) => linkify(colorTags(esc(s)));
+
+function normalizeDate(v) {
+  if (!v) return '';
+  let s = String(v).trim().replace(/\./g, '-').replace(/\s/g, '');
+  const p = s.split('-').filter(Boolean);
+  if (p.length >= 3 && /^\d+$/.test(p[1]) && /^\d+$/.test(p[2])) return `${p[0]}-${pad2(+p[1])}-${pad2(+p[2])}`;
+  if (p.length === 2 && /^\d+$/.test(p[0]) && /^\d+$/.test(p[1])) return `${new Date().getFullYear()}-${pad2(+p[0])}-${pad2(+p[1])}`;
+  return s;
+}
+function isImageUrl(t) {
+  t = t.trim();
+  if (!/^https?:/i.test(t) || /\s/.test(t)) return false;
+  const l = t.toLowerCase();
+  return l.includes('drive.google.com') || /\.(jpe?g|png|gif|webp|bmp)/.test(l);
+}
+function gdriveDirect(url) {
+  let m = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/) || url.match(/[?&]id=([\w-]+)/);
+  return m ? `https://drive.google.com/thumbnail?id=${m[1]}&sz=w1600` : url;
+}
+
+// CSV 파서 (따옴표·줄바꿈 포함 셀 지원)
+function parseCSV(text) {
+  const rows = []; let row = [], cell = '', q = false;
+  text = text.replace(/^﻿/, '');
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; }
+      else cell += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+    else if (c !== '\r') cell += c;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+const cleanH = (h) => String(h || '').replace(/[﻿​]/g, '').trim();
+
+// 괄호 안 콤마는 무시하고 콤마로 분리
+function splitTop(line) {
+  const out = []; let buf = '', depth = 0;
+  for (const ch of line) {
+    if (ch === '(') { depth++; buf += ch; }
+    else if (ch === ')') { depth = Math.max(0, depth - 1); buf += ch; }
+    else if (ch === ',' && depth === 0) { out.push(buf); buf = ''; }
+    else buf += ch;
+  }
+  out.push(buf);
+  return out.map((s) => s.trim()).filter(Boolean);
+}
+
+// ─── 데이터 ───────────────────────────────────────────────────────────────
+let notices = [];      // 안전지도 줄 목록
+let records = [];      // [{date, tasks, pending, trip, duty, quote}]
+let scheduleHeaders = [];
+let weather = '';
+let selDate = todayStr();
+let view = 'cur';
+
+function parseNotice(text) {
+  return parseCSV(text).map((r) => (r[0] || '').trim()).filter((t) => t && t !== '0');
+}
+function parseSchedule(text) {
+  const rows = parseCSV(text);
+  if (!rows.length) return [];
+  const headers = rows[0].map(cleanH);
+  scheduleHeaders = headers;
+  const find = (...kws) => {
+    for (let i = 0; i < headers.length; i++) {
+      const h = headers[i].replace(/\s/g, '');
+      if (kws.some((k) => h.includes(k))) return i;
+    }
+    return -1;
+  };
+  let iDate = headers.findIndex((h) => h === '날짜');
+  if (iDate < 0) iDate = headers.findIndex((h) => h.includes('날짜') || h.includes('일자'));
+  if (iDate < 0) iDate = 0;
+  const idx = {
+    tasks: find('업무전달', '업무'),
+    pending: find('접수대기', '접수', '대기'),
+    trip: find('출장'),
+    duty: headers.findIndex((h) => h.replace(/\s/g, '') === CONFIG.DUTY_FIELD),
+    quote: find('한마디', '오늘의한마디'),
+  };
+  const out = [];
+  for (const r of rows.slice(1)) {
+    const date = normalizeDate(r[iDate]);
+    if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+    const g = (i) => (i >= 0 && r[i] ? r[i].trim() : '');
+    out.push({ date, tasks: g(idx.tasks), pending: g(idx.pending), trip: g(idx.trip), duty: g(idx.duty), quote: g(idx.quote) });
+  }
+  return out;
+}
+
+// 같은 날짜 행이 여러 개면 합치기 (원본 build_synth_row와 같은 규칙)
+function synth(rows) {
+  const tasks = [], pending = [], trips = [], duties = []; let quote = '';
+  for (const r of rows) {
+    if (r.tasks) for (const line of r.tasks.split('\n')) if (line.trim()) tasks.push(line.trim());
+    if (r.pending) pending.push(...r.pending.split('\n'));
+    if (r.trip) trips.push(...r.trip.split('\n'));
+    if (r.duty) duties.push(...r.duty.split('\n'));
+    if (r.quote) quote = r.quote;
+  }
+  // 업무전달: 한 줄에 콤마로 나열된 항목 분리 (괄호 안 콤마 제외)
+  const taskItems = [];
+  for (const line of tasks) for (const p of line.split(/,\s*(?![^()]*\))/)) if (p.trim()) taskItems.push(p.trim());
+  return {
+    tasks: taskItems,
+    pending: pending.map((s) => s.trim()).filter(Boolean),
+    duty: buildDuty(duties, trips),
+    quote,
+  };
+}
+
+// ─── 복무 분류 ─────────────────────────────────────────────────────────────
+const DUTY_TYPES = [
+  { key: '출장', color: '#2980B9', test: (s) => s.includes('출장') },
+  { key: '연가', color: '#E67E22', test: (s) => s.includes('연가') },
+  { key: '병가', color: '#E74C3C', test: (s) => s.includes('병가') || s.includes('병조퇴') || s.includes('병외출') || s.includes('병지참') },
+  { key: '조퇴', color: '#D35400', test: (s) => s.includes('조퇴') },
+  { key: '외출', color: '#16A085', test: (s) => s.includes('외출') },
+  { key: '지참', color: '#7F8C8D', test: (s) => s.includes('지참') },
+  { key: '육아·모성', color: '#27AE60', test: (s) => /육아|모성|임신|수유/.test(s) },
+  { key: '특별휴가', color: '#8E44AD', test: (s) => s.includes('휴가') || s.includes('공가') || s.includes('특별') },
+];
+function dutyGroup(status) {
+  for (const t of DUTY_TYPES) if (t.test(status)) return t;
+  return { key: '기타', color: '#555' };
+}
+
+// 시트 저장 형식: "근무상황: 이름(시간, 장소)"  예) "조퇴: 박한빈(15:00~16:30)"
+function parseDutyLine(line) {
+  const m = line.match(/^([^:：]+)[:：]\s*(.+)$/);
+  if (!m) return null;
+  const status = m[1].trim();
+  const body = m[2].trim();
+  const pm = body.match(/^(.*?)\((.*)\)\s*$/);
+  let name = body, time = '', place = '';
+  if (pm) {
+    name = pm[1].trim();
+    const parts = pm[2].split(',').map((s) => s.trim());
+    time = parts.shift() || '';
+    place = parts.join(', ');
+    if (time && !/\d|종일/.test(time)) { place = [time, place].filter(Boolean).join(', '); time = ''; }
+  }
+  return { status, name, time, place };
+}
+
+// 원본 앱이 '출장' 칸에 넣은 형식 "A, B, C(시간, 장소)" → 사람별로 풀기
+function parseLegacyTrips(lines) {
+  const out = [];
+  for (let line of lines) {
+    line = line.trim(); if (!line) continue;
+    let pending = [];
+    for (const entry of splitTop(line)) {
+      const m = entry.match(/^(.*?)\((.*?),\s*(.*?)\)\s*$/);
+      if (m) {
+        for (const n of pending) out.push({ status: '출장', name: n, time: m[2].trim(), place: m[3].trim() });
+        out.push({ status: '출장', name: m[1].trim(), time: m[2].trim(), place: m[3].trim() });
+        pending = [];
+      } else {
+        const m2 = entry.match(/^(.*?)\((.*?)\)\s*$/);
+        if (m2) {
+          for (const n of pending) out.push({ status: '출장', name: n, time: m2[2].trim(), place: '' });
+          out.push({ status: '출장', name: m2[1].trim(), time: m2[2].trim(), place: '' });
+          pending = [];
+        } else pending.push(entry.trim());
+      }
+    }
+    for (const n of pending) out.push({ status: '출장', name: n, time: '', place: '' });
+  }
+  return out;
+}
+
+function buildDuty(dutyLines, tripLines) {
+  const people = [];
+  const seen = new Set();
+  const add = (p) => {
+    const k = `${p.name}|${p.time}|${dutyGroup(p.status).key}`;
+    if (seen.has(k)) return;
+    seen.add(k); people.push(p);
+  };
+  for (const line of dutyLines) {
+    const p = parseDutyLine(line.trim());
+    if (p) add(p);
+    else if (line.trim()) add({ status: '기타', name: line.trim(), time: '', place: '' });
+  }
+  // '출장' 칸(원본 PC 앱이 올린 값)도 함께 보여주되, 복무 칸과 겹치면 한 번만
+  const dutyTripNames = new Set(people.filter((p) => dutyGroup(p.status).key === '출장').map((p) => p.name));
+  for (const p of parseLegacyTrips(tripLines)) if (!dutyTripNames.has(p.name)) add(p);
+
+  const groups = new Map();
+  for (const p of people) {
+    const g = dutyGroup(p.status);
+    if (!groups.has(g.key)) groups.set(g.key, { ...g, people: [] });
+    groups.get(g.key).people.push(p);
+  }
+  const order = DUTY_TYPES.map((t) => t.key).concat('기타');
+  return [...groups.values()].sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key));
+}
+
+// ─── 화면 그리기 ───────────────────────────────────────────────────────────
+function nextSchoolDay(after) {
+  const ds = [...new Set(records.map((r) => r.date))].filter((d) => d > after).sort();
+  return ds[0] || null;
+}
+
+function render() {
+  $('#dateText').textContent = (selDate === todayStr() ? '오늘 · ' : '') + prettyDate(selDate);
+  $('#datePick').value = selDate;
+  $('#segCur').textContent = selDate === todayStr() ? '오늘' : '선택 날짜';
+  const nd = nextSchoolDay(selDate);
+  $('#segNext').textContent = nd ? `다음 수업일 · ${+nd.slice(5, 7)}/${+nd.slice(8)}` : '다음 수업일 (없음)';
+  for (const b of $('#seg').children) b.classList.toggle('on', b.dataset.v === view);
+
+  const target = view === 'cur' ? selDate : nd;
+  const main = $('#main');
+  let h = '';
+  if (weather) h += `<div class="weather">${esc(weather)}</div>`;
+
+  const rows = target ? records.filter((r) => r.date === target) : [];
+  if (!rows.length) {
+    h += `<div class="card"><div class="empty">${target ? '해당 날짜에 등록된 일정이 없습니다.' : '다음 수업일 정보가 없습니다.'}</div></div>`;
+  } else {
+    const s = synth(rows);
+    // 업무전달
+    h += `<div class="card"><h2>📌 업무전달 ${s.tasks.length ? `<span class="count">${s.tasks.length}</span>` : ''}</h2>`;
+    if (s.tasks.length) {
+      s.tasks.forEach((t, i) => {
+        const key = `chk:${target}:${t}`;
+        const on = store.get(key) === '1';
+        h += `<label class="task${on ? ' done' : ''}"><input type="checkbox" data-k="${esc(key)}"${on ? ' checked' : ''}><span>${rich(t)}</span></label>`;
+      });
+    } else h += `<div class="empty">없음</div>`;
+    h += `</div>`;
+
+    // 복무 (전체)
+    const total = s.duty.reduce((n, g) => n + g.people.length, 0);
+    h += `<div class="card"><h2>👥 복무 ${total ? `<span class="count">${total}명</span>` : ''}</h2>`;
+    if (total) {
+      for (const g of s.duty) {
+        h += `<div class="dgroup"><span class="chip" style="background:${g.color}">${esc(g.key)} ${g.people.length}</span>`;
+        // 같은 시간·장소·종류는 한 줄로 묶기 (예: 5명이 같은 연수에 출장)
+        const clusters = new Map();
+        for (const p of g.people) {
+          const kind = p.status && p.status !== g.key ? p.status : '';
+          const k = `${p.time}|${p.place}|${kind}`;
+          if (!clusters.has(k)) clusters.set(k, { time: p.time, place: p.place, kind, names: [] });
+          clusters.get(k).names.push(p.name);
+        }
+        for (const c of clusters.values()) {
+          h += `<div class="person"><b>${c.names.map(esc).join(', ')}</b>${c.time ? `<span class="t">${esc(c.time)}</span>` : ''}${c.kind ? `<span class="k">${esc(c.kind)}</span>` : ''}${c.place ? `<span class="p">📍 ${rich(c.place)}</span>` : ''}</div>`;
+        }
+        h += `</div>`;
+      }
+    } else h += `<div class="empty">없음</div>`;
+    h += `</div>`;
+
+    // 접수대기
+    h += `<div class="card"><h2>📨 접수대기 ${s.pending.length ? `<span class="count">${s.pending.length}</span>` : ''}</h2>`;
+    h += s.pending.length ? `<ul class="plain">${s.pending.map((p) => `<li>${rich(p)}</li>`).join('')}</ul>` : `<div class="empty">없음</div>`;
+    h += `</div>`;
+
+    // 한마디
+    const q = (s.quote || '').trim();
+    h += `<div class="card"><h2>💡 오늘의 한마디</h2>`;
+    if (q && q.toLowerCase() !== 'nan') {
+      h += isImageUrl(q)
+        ? `<div class="quote"><img src="${esc(gdriveDirect(q))}" alt="오늘의 한마디" id="quoteImg" loading="lazy"></div>`
+        : `<div class="quote">${rich(q)}</div>`;
+    } else h += `<div class="empty">오늘은 쉬어요</div>`;
+    h += `</div>`;
+  }
+
+  // 안전지도 (접고 펴기)
+  if (notices.length) {
+    const open = store.get('noticeOpen', '1') === '1';
+    h += `<details class="card notice" id="noticeBox"${open ? ' open' : ''}><summary><h2>📢 안전지도 내용</h2></summary>`;
+    h += `<ul class="plain">${notices.map((n) => `<li>${rich(n.replace(/^ㆍ\s*/, ''))}</li>`).join('')}</ul></details>`;
+  }
+  main.innerHTML = h;
+
+  main.querySelectorAll('.task input').forEach((cb) => cb.addEventListener('change', () => {
+    if (cb.checked) store.set(cb.dataset.k, '1'); else store.del(cb.dataset.k);
+    cb.closest('.task').classList.toggle('done', cb.checked);
+  }));
+  const nb = $('#noticeBox');
+  if (nb) nb.addEventListener('toggle', () => store.set('noticeOpen', nb.open ? '1' : '0'));
+  const qi = $('#quoteImg');
+  if (qi) {
+    qi.addEventListener('click', () => { $('#imgView img').src = qi.src; $('#imgView').classList.add('on'); });
+    qi.addEventListener('error', () => { qi.replaceWith(Object.assign(document.createElement('div'), { className: 'empty', textContent: '이미지를 불러올 수 없습니다.' })); });
+  }
+}
+
+// ─── 불러오기 ─────────────────────────────────────────────────────────────
+let fetching = false;
+let lastFetch = 0;
+function setStatus(t, ms) {
+  $('#status').textContent = t;
+  if (ms) setTimeout(() => { if ($('#status').textContent === t) $('#status').textContent = ''; }, ms);
+}
+// 조회 실패한 부분(날씨/미세먼지)은 빼고 보여줌
+function cleanWeather(t) {
+  return String(t || '').split(/　+/).map((s) => s.trim()).filter((s) => s && !s.includes('실패')).join('　　');
+}
+function applyTexts(nText, sText, wText) {
+  notices = parseNotice(nText);
+  records = parseSchedule(sText);
+  if (wText) weather = cleanWeather(wText);
+}
+function loadCache() {
+  const n = store.get('cache:n'), s = store.get('cache:s');
+  if (n !== null && s !== null) {
+    applyTexts(n, s, store.get('cache:w', ''));
+    const at = store.get('cache:at');
+    setStatus(at ? `이전 자료 표시 중 (${at})` : '이전 자료 표시 중');
+    render();
+  }
+}
+async function fetchText(url, timeout = 15000) {
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), timeout);
+  try {
+    const sep = url.includes('?') ? '&' : '?';
+    const res = await fetch(`${url}${sep}_=${Date.now()}`, { signal: ctl.signal, cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.text();
+  } finally { clearTimeout(t); }
+}
+async function fetchWeather() {
+  try {
+    const t = (await fetchText(`${CONFIG.SCRIPT_URL}?action=weather`, 10000)).trim();
+    if (!t || t.startsWith('<') || t.includes('없음') || t.startsWith('오류') || t === 'OK') return '';
+    return cleanWeather(t);
+  } catch { return ''; }
+}
+async function refresh() {
+  if (fetching || !CONFIG.SCHEDULE_URL) return;
+  fetching = true;
+  lastFetch = Date.now();
+  $('#refreshBtn').classList.add('spin');
+  setStatus('최신 자료 불러오는 중...');
+  try {
+    const [n, s, w] = await Promise.all([fetchText(CONFIG.NOTICE_URL), fetchText(CONFIG.SCHEDULE_URL), fetchWeather()]);
+    applyTexts(n, s, w);
+    const at = new Date();
+    store.set('cache:n', n); store.set('cache:s', s); if (w) store.set('cache:w', w);
+    store.set('cache:at', `${at.getMonth() + 1}/${at.getDate()} ${pad2(at.getHours())}:${pad2(at.getMinutes())}`);
+    setStatus('✅ 최신화 완료', 2500);
+    render();
+  } catch (e) {
+    setStatus('⚠️ 인터넷 연결 확인 — 이전 자료 표시 중');
+  } finally {
+    fetching = false;
+    $('#refreshBtn').classList.remove('spin');
+  }
+}
+
+// ─── 하단 시트 (메뉴/관리) ─────────────────────────────────────────────────
+function openSheet(html) {
+  $('#sheet').innerHTML = html;
+  $('#sheetBg').classList.add('on');
+  requestAnimationFrame(() => $('#sheet').classList.add('on'));
+}
+function closeSheet() {
+  $('#sheet').classList.remove('on');
+  $('#sheetBg').classList.remove('on');
+}
+function toast(t, ms = 2500) {
+  const el = $('#toast'); el.textContent = t; el.classList.add('on');
+  clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('on'), ms);
+}
+
+function openMenu() {
+  openSheet(`
+    <h3>메뉴</h3>
+    <button class="menuitem" id="mCopy">📋 글자 복사 (보고 있는 날짜)</button>
+    <button class="menuitem" id="mAdd">➕ 업무전달 추가 <small style="color:#888">(관리자)</small></button>
+    <button class="menuitem" id="mNeis">🗂️ 나이스 복무 엑셀 업로드 <small style="color:#888">(관리자)</small></button>
+    <button class="menuitem" id="mSheet">🔒 구글 시트 열기</button>
+    <button class="menuitem" id="mInstall" style="display:${deferredInstall ? 'block' : 'none'}">📲 홈 화면에 앱 설치</button>
+    <button class="menuitem" id="mReset">♻️ 설정 지우기</button>
+    <button class="btn no" id="mClose">닫기</button>
+  `);
+  $('#mReset').onclick = resetConfig;
+  $('#mClose').onclick = closeSheet;
+  $('#mCopy').onclick = copyText;
+  $('#mAdd').onclick = openAddTask;
+  $('#mNeis').onclick = openNeisUpload;
+  if (!CONFIG.SHEET_EDIT_URL) $('#mSheet').style.display = 'none';
+  $('#mSheet').onclick = () => { window.open(CONFIG.SHEET_EDIT_URL, '_blank'); closeSheet(); };
+  $('#mInstall').onclick = async () => { closeSheet(); deferredInstall.prompt(); deferredInstall = null; };
+}
+
+function copyText() {
+  const target = view === 'cur' ? selDate : nextSchoolDay(selDate);
+  const rows = target ? records.filter((r) => r.date === target) : [];
+  const s = synth(rows);
+  const duty = s.duty.map((g) => `[${g.key}] ` + g.people.map((p) => p.name + (p.time ? `(${p.time})` : '')).join(', ')).join('\n');
+  const text = `[${target ? prettyDate(target) : ''}]\n\n[안전지도 내용]\n${notices.join('\n')}\n\n[업무전달]\n${s.tasks.join('\n') || '없음'}\n\n[복무]\n${duty || '없음'}\n\n[접수대기문건]\n${s.pending.join('\n') || '없음'}`;
+  const done = () => { closeSheet(); toast('📋 복사 완료!'); };
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+  else fallbackCopy(text, done);
+}
+function fallbackCopy(text, done) {
+  const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+  try { document.execCommand('copy'); done(); } catch { toast('복사에 실패했습니다.'); }
+  ta.remove();
+}
+
+// 관리자 토큰: config_local.py의 API_TOKEN 값. 처음 한 번만 입력
+function tokenField() {
+  const saved = store.get('apiToken', '');
+  return `<label>관리자 토큰 ${saved ? '<span style="color:#27AE60">(저장됨)</span>' : ''}</label>
+    <input type="password" id="tok" placeholder="${saved ? '저장된 토큰 사용 (바꿀 때만 입력)' : 'API_TOKEN 값 입력'}" autocomplete="off">
+    <div class="hint">입력한 토큰은 이 휴대폰에만 저장됩니다.</div>`;
+}
+function readToken() {
+  const v = ($('#tok') && $('#tok').value.trim()) || store.get('apiToken', '');
+  if (v) store.set('apiToken', v);
+  return v;
+}
+
+// 앱스 스크립트로 전송 (응답은 읽을 수 없는 no-cors 방식이라 전송만 확인)
+async function postToSheet(date, field, content, token) {
+  const body = new URLSearchParams({ date, content, token });
+  if (field) body.set('field', field);
+  await fetch(CONFIG.SCRIPT_URL, { method: 'POST', mode: 'no-cors', body });
+}
+
+function openAddTask() {
+  openSheet(`
+    <h3>➕ 업무전달 추가</h3>
+    <label>날짜</label><input type="date" id="aDate" value="${selDate}">
+    <label>업무내용</label><input type="text" id="aTask" placeholder="예) 기초학력 진단평가">
+    <div class="row2">
+      <div><label>시작시간</label><input type="text" id="aStart" placeholder="10:00" inputmode="numeric"></div>
+      <div><label>종료시간</label><input type="text" id="aEnd" placeholder="12:00" inputmode="numeric"></div>
+    </div>
+    <label>대상</label><input type="text" id="aTarget" placeholder="예) 3~6학년, 전교생">
+    ${tokenField()}
+    <div class="row2" style="margin-top:14px"><button class="btn no" id="aNo">취소</button><button class="btn ok" id="aOk">등록하기</button></div>
+  `);
+  $('#aNo').onclick = closeSheet;
+  $('#aOk').onclick = async () => {
+    const task = $('#aTask').value.trim();
+    if (!task) return toast('업무내용을 입력해주세요.');
+    const token = readToken();
+    if (!token) return toast('관리자 토큰을 입력해주세요.');
+    const start = $('#aStart').value.trim(), end = $('#aEnd').value.trim(), tgt = $('#aTarget').value.trim();
+    const time = start && end ? `${start}~${end}` : start;
+    const meta = [time, tgt].filter(Boolean).join(', ');
+    const content = meta ? `${task}(${meta})` : task;
+    $('#aOk').disabled = true; $('#aOk').textContent = '전송 중...';
+    try {
+      await postToSheet($('#aDate').value, '', content, token);
+      closeSheet(); toast('✅ 등록 요청 완료 — 잠시 후 반영됩니다');
+      setTimeout(refresh, 4000);
+    } catch (e) {
+      toast('❌ 전송 실패: ' + e.message);
+      $('#aOk').disabled = false; $('#aOk').textContent = '등록하기';
+    }
+  };
+}
+
+// ─── 나이스 근무상황 엑셀 → 모든 복무 ──────────────────────────────────────
+function loadScript(src) {
+  return new Promise((ok, no) => {
+    if (window.XLSX) return ok();
+    const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = () => no(new Error('엑셀 모듈을 불러오지 못했습니다'));
+    document.head.appendChild(s);
+  });
+}
+function cellStr(v) {
+  if (v === null || v === undefined) return '';
+  if (v instanceof Date) return `${ymd(v)} ${pad2(v.getHours())}:${pad2(v.getMinutes())}`;
+  return String(v).trim();
+}
+function datesBetween(a, b) {
+  const out = [];
+  const [y1, m1, d1] = a.split('-').map(Number), [y2, m2, d2] = b.split('-').map(Number);
+  const s = new Date(y1, m1 - 1, d1), e = new Date(y2, m2 - 1, d2);
+  if (e < s || (e - s) / 864e5 > 62) return [a];
+  for (let d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
+    if (d.getDay() !== 0 && d.getDay() !== 6) out.push(ymd(d));
+  }
+  return out.length ? out : [a];
+}
+// 반환: { items: [{date, content}], undated: [{status,name,place}] }
+function parseDutySheet(rows) {
+  const hi = rows.findIndex((r) => r.map(cellStr).includes('근무상황'));
+  if (hi < 0) throw new Error('근무상황 엑셀이 아닙니다 (\'근무상황\' 열을 찾을 수 없음)');
+  const H = rows[hi].map(cellStr);
+  const ix = (n) => H.indexOf(n);
+  const iName = ix('성명'), iStat = ix('근무상황'), iPlace = ix('목적지'), iPeriod = ix('기간'), iAppr = ix('승인상태');
+  if (iName < 0 || iStat < 0) throw new Error('성명/근무상황 열을 찾을 수 없습니다');
+  const items = [], undated = [];
+  for (const r of rows.slice(hi + 1)) {
+    const name = cellStr(r[iName]), status = cellStr(r[iStat]);
+    if (!name || !status) continue;
+    const appr = iAppr >= 0 ? cellStr(r[iAppr]) : '';
+    if (/반려|취소|회수/.test(appr)) continue;
+    const place = iPlace >= 0 ? cellStr(r[iPlace]) : '';
+    const period = iPeriod >= 0 ? cellStr(r[iPeriod]) : '';
+    const m = period.match(/(\d{4})[.\-](\d{1,2})[.\-](\d{1,2})\s*(\d{1,2}:\d{2})?\s*~\s*(\d{4})[.\-](\d{1,2})[.\-](\d{1,2})\s*(\d{1,2}:\d{2})?/);
+    if (!m) { undated.push({ status, name, place }); continue; }
+    const sd = `${m[1]}-${pad2(+m[2])}-${pad2(+m[3])}`, ed = `${m[5]}-${pad2(+m[6])}-${pad2(+m[7])}`;
+    const time = m[4] && m[8] ? `${m[4]}~${m[8]}` : (m[4] || '');
+    const repeat = /반복/.test(period);
+    if (sd === ed) {
+      items.push({ date: sd, content: dutyContent(status, name, time, place) });
+    } else if (repeat) {
+      for (const d of datesBetween(sd, ed)) items.push({ date: d, content: dutyContent(status, name, time, place) });
+    } else {
+      // 여러 날 이어지는 복무(연가·출장 등): 첫날/마지막날은 해당 시각, 중간은 종일
+      const ds = datesBetween(sd, ed);
+      ds.forEach((d, i) => {
+        let t = '종일';
+        if (d === sd && m[4]) t = `${m[4]}~`;
+        if (d === ed && m[8]) t = `~${m[8]}`;
+        items.push({ date: d, content: dutyContent(status, name, `${t} (${+m[2]}/${+m[3]}~${+m[6]}/${+m[7]})`, place) });
+      });
+    }
+  }
+  return { items, undated };
+}
+function dutyContent(status, name, time, place) {
+  const meta = [time, place].filter(Boolean).join(', ');
+  return `${status}: ${name}${meta ? `(${meta})` : ''}`;
+}
+function mostCommonDate(items) {
+  const c = {};
+  for (const it of items) c[it.date] = (c[it.date] || 0) + 1;
+  return Object.entries(c).sort((a, b) => b[1] - a[1])[0]?.[0] || todayStr();
+}
+
+function openNeisUpload() {
+  const hasCol = scheduleHeaders.some((h) => h.replace(/\s/g, '') === CONFIG.DUTY_FIELD);
+  openSheet(`
+    <h3>🗂️ 나이스 복무 업로드</h3>
+    ${hasCol ? '' : `<div class="hint" style="color:#C0392B;font-weight:700">⚠️ 구글 시트 '일정' 탭 맨 오른쪽에 '${CONFIG.DUTY_FIELD}' 열(1행 제목)을 먼저 만들어 주세요. 열이 없으면 업로드하지 않습니다. 만든 뒤 새로고침하세요.</div>`}
+    <div class="hint">나이스 › 부서일일근무상황목록을 엑셀로 내려받아 선택하세요. 출장·연가·조퇴·병가·육아시간 등 <b>모든 복무</b>가 올라갑니다.</div>
+    <label>엑셀 파일 (.xlsx)</label>
+    <input type="file" id="nFile" accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+    <div id="nPrev" style="margin-top:10px"></div>
+    ${tokenField()}
+    <div class="row2" style="margin-top:14px"><button class="btn no" id="nNo">취소</button><button class="btn ok" id="nOk" disabled>업로드</button></div>
+  `);
+  let parsed = null;
+  $('#nNo').onclick = closeSheet;
+  $('#nFile').onchange = async (ev) => {
+    const f = ev.target.files[0]; if (!f) return;
+    $('#nPrev').innerHTML = '<div class="hint">읽는 중...</div>';
+    try {
+      await loadScript(XLSX_CDN);
+      const wb = XLSX.read(await f.arrayBuffer(), { type: 'array', cellDates: true });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: '' });
+      parsed = parseDutySheet(rows);
+      const base = mostCommonDate(parsed.items);
+      let ph = '';
+      if (parsed.undated.length) {
+        ph += `<label>기간이 비어 있는 ${parsed.undated.length}건(예: ${esc(parsed.undated[0].name)} ${esc(parsed.undated[0].status)})의 날짜</label>
+               <input type="date" id="nBase" value="${base}">`;
+      }
+      ph += `<div class="preview" id="nList"></div>`;
+      $('#nPrev').innerHTML = ph;
+      const drawList = () => {
+        const all = collectItems(parsed);
+        const byDate = {};
+        for (const it of all) (byDate[it.date] = byDate[it.date] || []).push(it.content);
+        $('#nList').innerHTML = Object.keys(byDate).sort().map((d) =>
+          `<div class="d">${prettyDate(d)} · ${byDate[d].length}건</div>` + byDate[d].map((c) => `<div>• ${esc(c)}</div>`).join('')
+        ).join('') || '<div class="empty">올릴 항목이 없습니다.</div>';
+        $('#nOk').disabled = !all.length || !hasCol;
+        $('#nOk').textContent = all.length ? `${all.length}건 업로드` : '업로드';
+      };
+      if ($('#nBase')) $('#nBase').onchange = drawList;
+      drawList();
+    } catch (e) {
+      parsed = null;
+      $('#nPrev').innerHTML = `<div class="hint" style="color:#C0392B">${esc(e.message)}</div>`;
+      $('#nOk').disabled = true;
+    }
+  };
+  $('#nOk').onclick = async () => {
+    if (!parsed) return;
+    const token = readToken();
+    if (!token) return toast('관리자 토큰을 입력해주세요.');
+    const all = collectItems(parsed);
+    const btn = $('#nOk'); btn.disabled = true;
+    let ok = 0, fail = 0;
+    for (const it of all) {
+      btn.textContent = `전송 중 ${ok + fail + 1}/${all.length}`;
+      try { await postToSheet(it.date, CONFIG.DUTY_FIELD, it.content, token); ok++; } catch { fail++; }
+    }
+    closeSheet();
+    toast(fail ? `⚠️ ${ok}건 전송, ${fail}건 실패` : `✅ ${ok}건 전송 완료 — 잠시 후 반영됩니다`, 4000);
+    setTimeout(refresh, 5000);
+  };
+}
+function collectItems(parsed) {
+  const base = ($('#nBase') && $('#nBase').value) || mostCommonDate(parsed.items);
+  const out = parsed.items.slice();
+  for (const u of parsed.undated) out.push({ date: base, content: dutyContent(u.status, u.name, '종일', u.place) });
+  const seen = new Set();
+  return out.filter((it) => { const k = it.date + '|' + it.content; if (seen.has(k)) return false; seen.add(k); return true; });
+}
+
+// ─── 이벤트 ───────────────────────────────────────────────────────────────
+function shiftDate(n) {
+  const [y, m, d] = selDate.split('-').map(Number);
+  selDate = ymd(new Date(y, m - 1, d + n)); view = 'cur'; render();
+}
+$('#prevBtn').onclick = () => shiftDate(-1);
+$('#nextBtn').onclick = () => shiftDate(1);
+$('#todayBtn').onclick = () => { selDate = todayStr(); view = 'cur'; render(); };
+$('#datePick').onchange = (e) => { if (e.target.value) { selDate = e.target.value; view = 'cur'; render(); } };
+$('#seg').onclick = (e) => { const v = e.target.dataset && e.target.dataset.v; if (v) { view = v; render(); window.scrollTo(0, 0); } };
+$('#refreshBtn').onclick = refresh;
+$('#menuBtn').onclick = openMenu;
+$('#sheetBg').onclick = closeSheet;
+$('#imgView').onclick = () => $('#imgView').classList.remove('on');
+
+// 좌우 스와이프로 날짜 이동
+let tx = null, ty = null;
+$('#main').addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
+$('#main').addEventListener('touchend', (e) => {
+  if (tx === null) return;
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8) shiftDate(dx < 0 ? 1 : -1);
+  tx = null;
+}, { passive: true });
+
+// 앱으로 돌아오면 자동 갱신 (10분 이상 지났을 때)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    if (selDate < todayStr() && view === 'cur' && store.get('lastDay') !== todayStr()) selDate = todayStr();
+    store.set('lastDay', todayStr());
+    if (Date.now() - lastFetch > 10 * 60 * 1000) refresh(); else render();
+  }
+});
+setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, 10 * 60 * 1000);
+
+// 설치(홈 화면 추가) / 오프라인 지원
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredInstall = e; });
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+// ─── 처음 설정 (설정 링크 / 설정 코드) ──────────────────────────────────────
+// 설정 코드 = {s:일정CSV, n:안전지도CSV, w:앱스스크립트, e:시트편집} JSON을 base64url로 바꾼 문자열
+function decodeSetup(text) {
+  let code = String(text || '').trim();
+  const at = code.indexOf('setup=');
+  if (at >= 0) code = code.slice(at + 6);
+  code = code.replace(/\s/g, '').replace(/-/g, '+').replace(/_/g, '/');
+  while (code.length % 4) code += '=';
+  let cfg = JSON.parse(atob(code));
+  // 짧은 형식 {k:게시ID, g:[일정gid, 안전지도gid], m:스크립트ID, d:시트ID} → 전체 주소로
+  if (cfg.k) {
+    const pub = (gid) => `https://docs.google.com/spreadsheets/d/e/${cfg.k}/pub?gid=${gid}&single=true&output=csv`;
+    cfg = {
+      s: pub(cfg.g[0]), n: pub(cfg.g[1]),
+      w: cfg.m ? `https://script.google.com/macros/s/${cfg.m}/exec` : '',
+      e: cfg.d ? `https://docs.google.com/spreadsheets/d/${cfg.d}/edit` : '',
+    };
+  }
+  if (!/^https:\/\/docs\.google\.com\//.test(cfg.s || '') || !/^https:\/\/docs\.google\.com\//.test(cfg.n || '')) throw new Error('bad');
+  if (cfg.w && !/^https:\/\/script\.google\.com\//.test(cfg.w)) throw new Error('bad');
+  return cfg;
+}
+function applyConfig(cfg) {
+  CONFIG.SCHEDULE_URL = cfg.s; CONFIG.NOTICE_URL = cfg.n;
+  CONFIG.SCRIPT_URL = cfg.w || ''; CONFIG.SHEET_EDIT_URL = cfg.e || '';
+}
+function initConfig() {
+  if (location.hash.includes('setup=')) {
+    try {
+      const cfg = decodeSetup(location.hash);
+      store.set('cfg', JSON.stringify(cfg));
+      ['cache:n', 'cache:s', 'cache:w', 'cache:at'].forEach(store.del);
+    } catch {}
+    history.replaceState(null, '', location.pathname + location.search); // 주소창에서 설정 값 지우기
+  }
+  try {
+    const cfg = JSON.parse(store.get('cfg', 'null'));
+    if (cfg && cfg.s && cfg.n) { applyConfig(cfg); return true; }
+  } catch {}
+  return false;
+}
+function showSetup() {
+  $('.datebar').style.display = 'none'; $('#seg').style.display = 'none';
+  setStatus('');
+  $('#main').innerHTML = `
+    <div class="card">
+      <h2>🔑 처음 설정</h2>
+      <p style="margin:0 0 8px">학교에서 받은 <b>설정 링크</b>를 누르거나 <b>QR코드</b>를 찍으면 자동으로 설정됩니다.</p>
+      <p class="hint">링크 대신 설정 코드를 받았다면 아래에 붙여넣으세요. 설정 값은 이 휴대폰에만 저장됩니다.</p>
+      <textarea id="setupCode" rows="4" style="width:100%;padding:10px;font-size:14px;border:1px solid #ccc;border-radius:10px;font-family:inherit" placeholder="설정 코드 또는 설정 링크 붙여넣기"></textarea>
+      <button class="btn ok" id="setupOk" style="margin-top:10px">저장하고 시작</button>
+    </div>`;
+  $('#setupOk').onclick = () => {
+    try {
+      const cfg = decodeSetup($('#setupCode').value);
+      store.set('cfg', JSON.stringify(cfg));
+      location.reload();
+    } catch { toast('설정 코드가 올바르지 않습니다.'); }
+  };
+}
+function resetConfig() {
+  if (!confirm('이 휴대폰에 저장된 설정과 자료를 지울까요?\n다시 쓰려면 설정 링크가 필요합니다.')) return;
+  ['cfg', 'cache:n', 'cache:s', 'cache:w', 'cache:at', 'apiToken'].forEach(store.del);
+  location.reload();
+}
+
+// 이미 열린 화면에서 설정 링크를 다시 연 경우
+window.addEventListener('hashchange', () => { if (location.hash.includes('setup=')) location.reload(); });
+
+store.set('lastDay', todayStr());
+if (initConfig()) {
+  render();
+  loadCache();
+  refresh();
+} else {
+  showSetup();
+}
+</script>
+</body>
+</html>
